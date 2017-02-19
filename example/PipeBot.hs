@@ -29,5 +29,5 @@ slackProducer = forever $ lift getNextEvent >>= yield
 slackConsumer :: MonadSlack m => Consumer Event m ()
 slackConsumer = forever $
     await >>= \case
-        (Message cid _ msg _ _ _) -> lift $ sendMessage cid msg
+        (Message cid _ msg _ _ _) -> void $ lift $ sendMessage cid msg
         _ -> return ()

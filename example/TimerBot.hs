@@ -36,7 +36,7 @@ parseTimeMessage = fmap (read . T.unpack) . T.stripPrefix "set timer "
 startTimer :: SlackHandle -> Int -> ChannelId -> IO ()
 startTimer h time cid = do
     threadDelay time
-    sendMessage h cid $ T.pack (show time) <> "ms has elapsed!"
+    void $ sendMessage h cid $ T.pack (show time) <> "ms has elapsed!"
 
 fromMaybeT :: Monad m => m a -> MaybeT m a -> m a
 fromMaybeT def x = maybe def return =<< runMaybeT x

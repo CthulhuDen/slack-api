@@ -122,14 +122,14 @@ getConfig = H.getConfig <$> askSlackHandle
 
 -- | Send a ping to the server, which should respond by sending a 'Pong'
 -- event.
-sendPing :: MonadSlack m => m ()
+sendPing :: MonadSlack m => m Int
 sendPing = liftIO . H.sendPing =<< askSlackHandle
 
 -- | Post a simple message to the specified channel. From the docs:
 --
 -- * Clients should limit messages sent to channels to 4000 characters.
 -- * Clients should not send more than one message per second sustained.
-sendMessage :: MonadSlack m => ChannelId -> T.Text -> m ()
+sendMessage :: MonadSlack m => ChannelId -> T.Text -> m Int
 sendMessage cid msg = askSlackHandle >>= \h -> liftIO (H.sendMessage h cid msg)
 
 -- | Post a complex message using the web API. There's a lot more

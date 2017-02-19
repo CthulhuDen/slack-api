@@ -26,5 +26,5 @@ mkConfig = do
 echoBot :: Slack ()
 echoBot = forever $ do
     getNextEvent >>= \case
-        (Message cid _ msg _ _ _) -> sendMessage cid msg
+        (Message cid _ msg _ _ _) -> void $ sendMessage cid msg
         _ -> return ()

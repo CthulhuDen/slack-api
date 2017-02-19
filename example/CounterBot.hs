@@ -39,5 +39,5 @@ counterBot = forever $
     getNextEvent >>= \case
         Message cid _ _ _ _ _ -> do
             num <- messageCount <%= (+1)
-            sendMessage cid (T.pack . show $ num)
+            void $ sendMessage cid (T.pack . show $ num)
         _ -> return ()

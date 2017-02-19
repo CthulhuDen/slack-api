@@ -109,18 +109,20 @@ nextMessageId SlackHandle{..} = do
     liftIO $ modifyIORef _shCounter (+1)
     liftIO $ readIORef _shCounter
 
-sendMessage :: SlackHandle -> ChannelId -> T.Text -> IO ()
+sendMessage :: SlackHandle -> ChannelId -> T.Text -> IO Int
 sendMessage h@SlackHandle{..} cid message = do
     uid <- nextMessageId h
     let payload = MessagePayload uid "message" cid message
     WS.sendTextData _shConnection (encode payload)
+    return uid
 
-sendPing :: SlackHandle -> IO ()
+sendPing :: SlackHandle -> IO Int
 sendPing h@SlackHandle{..} = do
     uid <- nextMessageId h
     now <- round <$> getPOSIXTime
     let payload = PingPayload uid "ping" now
     WS.sendTextData _shConnection (encode payload)
+    return uid
 
 sendRichMessage
     :: SlackHandle -> ChannelId -> T.Text -> [Attachment] -> IO (Either T.Text ())
