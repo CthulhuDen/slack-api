@@ -9,6 +9,7 @@ module Web.Slack.WebAPI
       -- * Methods
     , rtm_start
     , chat_postMessage
+    , chat_update
     ) where
 
 import Control.Lens hiding ((??))
@@ -72,6 +73,22 @@ chat_postMessage conf (Id cid) msg as =
         (W.param "channel"     .~ [cid]) .
         (W.param "text"        .~ [msg]) .
         (W.param "attachments" .~ [encode' as]) .
+        (W.param "as_user"     .~ ["true"])
+
+chat_update
+    :: (MonadError T.Text m, MonadIO m)
+    => SlackConfig
+    -> ChannelId
+    -> SlackTimeStamp
+    -> T.Text
+    -> [Attachment]
+    -> m ()
+chat_update conf (Id cid) t msg as_ =
+    void $ makeSlackCall conf "chat.update" $
+        (W.param "channel"     .~ [cid]) .
+        (W.param "ts"          .~ [encode' t]) .
+        (W.param "text"        .~ [msg]) .
+        (W.param "attachments" .~ [encode' as_]) .
         (W.param "as_user"     .~ ["true"])
 
 -------------------------------------------------------------------------------

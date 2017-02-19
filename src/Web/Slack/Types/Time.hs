@@ -26,6 +26,9 @@ instance FromJSON SlackTimeStamp where
                     <$> parseTimeString ts
                     <*> readZ uid)
 
+instance ToJSON SlackTimeStamp where
+  toJSON (SlackTimeStamp t u) = toJSON (timeToString t ++ "." ++ show u :: String)
+
 instance FromJSON Time where
   parseJSON (Number s) = return $ Time $ realToFrac s
   parseJSON (String t) = parseTimeString $ T.unpack t
@@ -33,3 +36,6 @@ instance FromJSON Time where
 
 parseTimeString :: String -> Parser Time
 parseTimeString s = fmap (Time . realToFrac) (readZ s :: Parser Integer)
+
+timeToString :: Time -> String
+timeToString (Time t) = show (round t :: Int)
